@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="CLIENT_ID">IIJJLBYXHC1TF1C5OLHH3IDZWOZEWQRX0JND0NV0AJTULYRZ</string>
     <string name="CLIENT_SECRET">WC1UIUYBOUBEUIH1EFHKDFCLSYGDOI15XZZVE0OEPIJFAC3L</string>
+    <string name="title_activity_friends">FriendsActivity</string>
 
 </resources>
