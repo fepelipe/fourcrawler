@@ -17,7 +17,8 @@ public class MainActivity extends Activity {
     private String tokenUrl;
     private String code;
     private String token;
-
+    private static final int REQUEST_CODE_FSQ_CONNECT = 200;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -41,25 +42,24 @@ public class MainActivity extends Activity {
 	Intent intent = FoursquareOAuth.getConnectIntent(this,
 		resource.getString(R.string.CLIENT_ID));
 	if (!FoursquareOAuth.isPlayStoreIntent(intent)) {
-	    startActivityForResult(intent, 9000);
+	    startActivityForResult(intent, REQUEST_CODE_FSQ_CONNECT);
 	}
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	switch (requestCode) {
-	case 9000:
+	case REQUEST_CODE_FSQ_CONNECT:
 	    AuthCodeResponse codeResponse = FoursquareOAuth
 		    .getAuthCodeFromResult(resultCode, data);
 	    code = codeResponse.getCode();
 	    tokenUrl = "https://foursquare.com/oauth2/access_token"
-		    + "&client_id=" + resource.getString(R.string.CLIENT_ID)
+		    + "?client_id=" + resource.getString(R.string.CLIENT_ID)
 		    + "&client_secret="
 		    + resource.getString(R.string.CLIENT_SECRET)
 		    + "&grant_type=authorization_code";
 	    AccessToken accessToken = new AccessToken(code, tokenUrl);
 	    accessToken.execute();
-
 	    SharedPreferences strings = getSharedPreferences("strings",
 		    MODE_PRIVATE);
 	    SharedPreferences.Editor editor = strings.edit();
