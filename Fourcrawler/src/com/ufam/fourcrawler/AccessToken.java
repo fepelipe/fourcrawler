@@ -11,8 +11,6 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
