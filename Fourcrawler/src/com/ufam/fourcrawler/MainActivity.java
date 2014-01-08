@@ -13,61 +13,58 @@ import com.foursquare.android.nativeoauth.FoursquareOAuth;
 import com.foursquare.android.nativeoauth.model.AuthCodeResponse;
 
 public class MainActivity extends Activity {
-    private Resources resource;
-    private String tokenUrl;
-    private String code;
-    private String token;
-    private static final int REQUEST_CODE_FSQ_CONNECT = 200;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main);
-	resource = getResources();
+	private Resources resource;
+	private String tokenUrl;
+	private String code;
+	private String token;
+	private static final int REQUEST_CODE_FSQ_CONNECT = 200;
 
-	SharedPreferences strings = getSharedPreferences("strings",
-		MODE_PRIVATE);
-	token = strings.getString("token", "null");
-	Log.v("Token Inicial", token);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		resource = getResources();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-	// Inflate the menu; this adds items to the action bar if it is present.
-	getMenuInflater().inflate(R.menu.main, menu);
-	return true;
-    }
-
-    public void foursquareAuth(View view) {
-	Intent intent = FoursquareOAuth.getConnectIntent(this,
-		resource.getString(R.string.CLIENT_ID));
-	if (!FoursquareOAuth.isPlayStoreIntent(intent)) {
-	    startActivityForResult(intent, REQUEST_CODE_FSQ_CONNECT);
+		SharedPreferences strings = getSharedPreferences("strings",
+				MODE_PRIVATE);
+		token = strings.getString("token", "null");
+		Log.i("Token Inicial", token);
+		if (token != "null"){
+			
+		}
 	}
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	switch (requestCode) {
-	case REQUEST_CODE_FSQ_CONNECT:
-	    AuthCodeResponse codeResponse = FoursquareOAuth
-		    .getAuthCodeFromResult(resultCode, data);
-	    code = codeResponse.getCode();
-	    tokenUrl = "https://foursquare.com/oauth2/access_token"
-		    + "?client_id=" + resource.getString(R.string.CLIENT_ID)
-		    + "&client_secret="
-		    + resource.getString(R.string.CLIENT_SECRET)
-		    + "&grant_type=authorization_code";
-	    AccessToken accessToken = new AccessToken(code, tokenUrl);
-	    accessToken.execute();
-	    SharedPreferences strings = getSharedPreferences("strings",
-		    MODE_PRIVATE);
-	    SharedPreferences.Editor editor = strings.edit();
-	    editor.putString("token", accessToken.getToken());
-	    editor.commit();
-	    Log.i("Token Armazenado", token);
-	    break;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
 	}
-    }
+
+	public void foursquareAuth(View view) {
+		Intent intent = FoursquareOAuth.getConnectIntent(this,
+				resource.getString(R.string.CLIENT_ID));
+		if (!FoursquareOAuth.isPlayStoreIntent(intent)) {
+			startActivityForResult(intent, REQUEST_CODE_FSQ_CONNECT);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_CODE_FSQ_CONNECT:
+			AuthCodeResponse codeResponse = FoursquareOAuth
+					.getAuthCodeFromResult(resultCode, data);
+			code = codeResponse.getCode();
+			tokenUrl = "https://foursquare.com/oauth2/access_token"
+					+ "?client_id=" + resource.getString(R.string.CLIENT_ID)
+					+ "&client_secret="
+					+ resource.getString(R.string.CLIENT_SECRET)
+					+ "&grant_type=authorization_code";
+			AccessToken accessToken = new AccessToken(this, code, tokenUrl);
+			accessToken.execute();
+			break;
+		}
+	}
 
 }

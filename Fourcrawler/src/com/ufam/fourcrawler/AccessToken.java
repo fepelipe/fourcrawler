@@ -11,15 +11,19 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class AccessToken extends AsyncTask<Void, Void, Void> {
+	private Context contexto;
 	private String code;
 	private String token;
 	private String tokenUrl;
 
-	public AccessToken(String code, String tokenUrl) {
+	public AccessToken(Context contexto, String code, String tokenUrl) {
+		this.contexto = contexto;
 		this.code = code;
 		this.tokenUrl = tokenUrl;
 	}
@@ -51,6 +55,17 @@ public class AccessToken extends AsyncTask<Void, Void, Void> {
 			Log.d("ErroJSON", "Erro", jsonException);
 		}
 		return null;
+	}
+
+	@Override
+	protected void onPostExecute(Void result) {
+		super.onPostExecute(result);
+		SharedPreferences strings = contexto.getSharedPreferences(
+				"strings", contexto.MODE_PRIVATE);
+		SharedPreferences.Editor editor = strings.edit();
+		editor.putString("token", token);
+		editor.commit();
+		Log.i("Token Armazenado", token);
 	}
 
 	public String streamToString(final InputStream inputStream)
