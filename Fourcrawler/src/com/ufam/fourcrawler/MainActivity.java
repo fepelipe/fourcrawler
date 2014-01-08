@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
 		token = strings.getString("token", "null");
 		Log.i("Token Inicial", token);
 		if (token != "null"){
-			
 		}
 	}
 
