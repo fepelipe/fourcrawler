@@ -33,6 +33,8 @@ public class AccessToken extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 
 		try {
+			Log.d("Token", "Request started!");
+			
 			final URL url = new URL(tokenUrl + "&code=" + code);
 			final HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();

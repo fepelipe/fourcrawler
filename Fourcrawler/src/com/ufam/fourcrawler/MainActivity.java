@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		resource = getResources();
 
-		// TOKEN: Verificação inicial
+		// TOKEN: VerificaÔøΩ‚Äπo inicial
 		SharedPreferences strings = getSharedPreferences("strings",
 				MODE_PRIVATE);
 		token = strings.getString("token", "null");
@@ -45,8 +45,8 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	// Se não houver token, pode-se fazer a request de um token em AccessToken
-	// Esse é o método chamado ao apertar o botão "Iniciar autenticação"
+	// Se n‚Äπo houver token, pode-se fazer a request de um token em AccessToken
+	// Esse ≈Ω o m≈Ωtodo chamado ao apertar o bot‚Äπo "Iniciar autenticaÔøΩ‚Äπo"
 	public void foursquareAuth(View view) {
 		Intent intent = FoursquareOAuth.getConnectIntent(this,
 				resource.getString(R.string.CLIENT_ID));
@@ -62,6 +62,9 @@ public class MainActivity extends Activity {
 			AuthCodeResponse codeResponse = FoursquareOAuth
 					.getAuthCodeFromResult(resultCode, data);
 			code = codeResponse.getCode();
+			
+			Log.d("Token", String.format("Code: %s", code));
+			
 			tokenUrl = "https://foursquare.com/oauth2/access_token"
 					+ "?client_id=" + resource.getString(R.string.CLIENT_ID)
 					+ "&client_secret="

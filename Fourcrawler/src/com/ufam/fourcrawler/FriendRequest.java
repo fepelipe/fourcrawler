@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONException;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,16 +17,23 @@ public class FriendRequest extends AsyncTask<Void, Void, Void> {
 	private String friendsString;
 	private ArrayList<String> arrayUsername;
 	private ArrayList<Integer> arrayId;
+	private ArrayList<User> arrayUsers;
 	
-	public FriendRequest(FriendsActivity activity, String friendsString) {
+	private User userObj;
+	
+	private Integer switchCaseFunction; //0- initialize | 1- fillGraph | otherwise- setAdapter
+
+	public FriendRequest(FriendsActivity activity, User userObj, String friendsString, Integer switchCaseFunction) {
 		this.activity = activity;
 		this.friendsString = friendsString;
+		this.switchCaseFunction = switchCaseFunction;
+		this.userObj = userObj;
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
 
-		ArrayList<User> arrayUser;
+		arrayUsers = new ArrayList<User>();
 		URL friendsUrl;
 
 		try {
@@ -42,16 +48,19 @@ public class FriendRequest extends AsyncTask<Void, Void, Void> {
 			String response = Util.streamToString(urlConnection
 					.getInputStream());
 
-			Log.d("Friends Response", response);
+			// Log.d("Friends Response", response);
+
 			Util util = new Util();
 			try {
 				// Array de User
-				arrayUser = util.getFriends(response);
+				arrayUsers = util.getFriends(response);
 				arrayUsername = new ArrayList<String>();
-				for (User user : arrayUser) {
+				arrayId = new ArrayList<Integer>();
+
+				for (User user : arrayUsers) {
 					// Array de IDs
 					arrayId.add(user.id);
-					
+
 					// Array de nomes
 					arrayUsername.add(user.firstName + " " + user.lastName);
 					Log.d("Nome inserido", user.firstName);
@@ -70,8 +79,21 @@ public class FriendRequest extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		// Chama a função que seta na tela a lista de amigos.
+		// Chama a funÔøΩ‚Äπo que seta na tela a lista de amigos.
 		super.onPostExecute(result);
-		activity.setAdapter(arrayUsername);
+
+		switch (switchCaseFunction) {
+			case 0:
+				activity.initializeGraph(arrayUsers);
+				break;
+			case 1:
+				activity.fillGraph(userObj, arrayUsers);
+				break;
+			default:
+				break;
+		}
+		
+		activity.counterUpdate();
+	
 	}
 }
